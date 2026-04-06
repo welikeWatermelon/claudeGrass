@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claudegrass"
+version = "0.1.0"
+description = "Visualize Claude Code token usage as a GitHub contribution heatmap"
+requires-python = ">=3.9"
+dependencies = ["requests"]
+license = "MIT"
+
+[project.scripts]
+claudegrass = "claudegrass.cli:main"
