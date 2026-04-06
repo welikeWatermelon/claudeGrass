@@ -27,9 +27,10 @@ def _make_assistant_entry(timestamp, input_t=100, output_t=50,
 
 class TestParseJsonlFile(unittest.TestCase):
     def test_basic_parsing(self):
+        # UTC 03:00 → KST 12:00 (같은 날), UTC 05:00 → KST 14:00 (같은 날)
         lines = [
-            _make_assistant_entry("2026-03-26T14:00:00.000Z", 100, 50, 200, 150),
-            _make_assistant_entry("2026-03-26T15:00:00.000Z", 50, 25, 100, 75),
+            _make_assistant_entry("2026-03-26T03:00:00.000Z", 100, 50, 200, 150),
+            _make_assistant_entry("2026-03-26T05:00:00.000Z", 50, 25, 100, 75),
         ]
         with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl",
                                          delete=False, encoding="utf-8") as f:
@@ -101,10 +102,11 @@ class TestParseJsonlFile(unittest.TestCase):
 
 class TestParseAllTokens(unittest.TestCase):
     def test_aggregation(self):
+        # UTC 03:00 → KST 12:00 (3/26), UTC 05:00 → KST 14:00 (3/26), UTC 01:00 → KST 10:00 (3/27)
         lines = [
-            _make_assistant_entry("2026-03-26T14:00:00.000Z", 100, 50, 0, 0),
-            _make_assistant_entry("2026-03-26T15:00:00.000Z", 100, 50, 0, 0),
-            _make_assistant_entry("2026-03-27T10:00:00.000Z", 200, 100, 0, 0),
+            _make_assistant_entry("2026-03-26T03:00:00.000Z", 100, 50, 0, 0),
+            _make_assistant_entry("2026-03-26T05:00:00.000Z", 100, 50, 0, 0),
+            _make_assistant_entry("2026-03-27T01:00:00.000Z", 200, 100, 0, 0),
         ]
         with tempfile.TemporaryDirectory() as tmpdir:
             project_dir = Path(tmpdir) / "test-project"
