@@ -74,16 +74,22 @@ def generate_svg(token_data: dict[str, int], theme: str | None = None) -> str:
 
     # 범례
     num_colors = len(colors)
-    legend_width = 30 + num_colors * (CELL_SIZE + 3) + 30
-    legend_x = width - legend_width
+    less_w = 28      # "Less" 텍스트 폭
+    gap = 6          # 텍스트와 색상 사이 간격
+    color_block_w = num_colors * (CELL_SIZE + 3) - 3  # 마지막 gap 제외
+    more_w = 30      # "More" 텍스트 폭
+    legend_total = less_w + gap + color_block_w + gap + more_w
+    legend_x = width - legend_total - 10
+
     parts.append(f'<text x="{legend_x}" y="{legend_y + 10}">Less</text>')
+    color_start_x = legend_x + less_w + gap
     for i, c in enumerate(colors):
-        lx = legend_x + 30 + i * (CELL_SIZE + 3)
+        lx = color_start_x + i * (CELL_SIZE + 3)
         parts.append(
             f'<rect x="{lx}" y="{legend_y}" width="{CELL_SIZE}" '
             f'height="{CELL_SIZE}" rx="2" fill="{c}"/>'
         )
-    more_x = legend_x + 30 + num_colors * (CELL_SIZE + 3) + 4
+    more_x = color_start_x + color_block_w + gap
     parts.append(f'<text x="{more_x}" y="{legend_y + 10}">More</text>')
 
     parts.append('</svg>')
